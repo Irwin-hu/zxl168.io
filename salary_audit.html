@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html data-page-node-id="zYKRa1Nmk9nh71h2dVV5pd" lang="zh-CN">
+<head data-page-node-id="ADOdTAdv2lvJksx5xgg1ST">
+<script data-page-node-id="NapeCycswLpOpMH6UWQNfH" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="EtUvf0vsUKtNt4bsZEbGZD" charset="UTF-8">
+<title data-page-node-id="KeQ5EoW6WZ7AKPhIq5ThIb" data-pnid-children="kEjiz9QQOzvifRhwdO49pM">计件工资系统 · 与原表逻辑一致性审计报告</title>
+<style data-page-node-id="T8sJYsIr3jFCDSOIkCG2lF" data-pnid-children="lJ61ExM4biWpgfdUQXlgOD">
+  :root{--line:#e5e7eb;--ink:#1f2937;--sub:#6b7280;--ok:#15803d;--warn:#b45309;--bad:#b91c1c;--pri:#1d4ed8}
+  *{box-sizing:border-box}
+  body{margin:0;padding:28px 20px 60px;background:#f6f7f9;color:var(--ink);
+       font:14px/1.75 -apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-size:23px;margin:0 0 6px;letter-spacing:.3px}
+  .meta{color:var(--sub);font-size:12.5px;margin-bottom:22px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:16px;
+         box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  h2{font-size:16px;margin:0 0 14px;padding-left:10px;border-left:4px solid var(--pri)}
+  h3{font-size:14px;margin:18px 0 8px;color:#374151}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 4px}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#f9fafb;font-weight:600;color:#374151;white-space:nowrap}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  code{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:5px;padding:1px 5px;font-size:12.5px;
+       font-family:ui-monospace,Menlo,Consolas,monospace;color:#b91c1c}
+  .ok{color:var(--ok);font-weight:700}
+  .warn{color:var(--warn);font-weight:700}
+  .bad{color:var(--bad);font-weight:700}
+  .tag{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .t-ok{background:#dcfce7;color:#15803d}
+  .t-fix{background:#dbeafe;color:#1d4ed8}
+  .t-note{background:#fef3c7;color:#92400e}
+  .box{border-left:3px solid var(--pri);background:#f8faff;padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0}
+  .box.w{border-color:#f59e0b;background:#fffbeb}
+  .box.d{border-color:#ef4444;background:#fef2f2}
+  ul{margin:6px 0 6px 18px;padding:0}
+  li{margin:3px 0}
+  .formula{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:12px 14px;font-size:12.5px;
+           font-family:ui-monospace,Menlo,Consolas,monospace;line-height:2;overflow-x:auto}
+  .formula b{color:#fbbf24;font-weight:600}
+  .formula i{color:#7dd3fc;font-style:normal}
+  .kpi{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 2px}
+  .kpi div{flex:1 1 150px;background:#f9fafb;border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+  .kpi b{display:block;font-size:19px;color:var(--pri);line-height:1.3}
+  .kpi span{font-size:11.5px;color:var(--sub)}
+  .foot{color:var(--sub);font-size:12px;text-align:center;margin-top:22px}
+</style>
+</head>
+<body data-page-node-id="Vk4sbwndjh1iX7SzkTURDG">
+<div data-page-node-id="d7c2sJPndJID4TKceIc5Qh" class="wrap">
+
+  <h1 data-page-node-id="ruAE35jAr9VXjMu5xbG5Qq"><!--pnid:yMzGftmiKQH4Hka0uFXgJb-->计件工资系统 · 与原表逻辑一致性审计报告</h1>
+  <div data-page-node-id="bJjL7DHDp959DkrCnNO0vE" class="meta"><!--pnid:eArCSTyYyqWcCU6jPTCm2o-->
+    审计基准：你最初上传的《2026年9月份工资表(2026-9-30核定)》（13 个工作表）＋ 已导入的 7／8 月原表快照<br data-page-node-id="DiYriYkY8sq0Ftp2Wm2blO"><!--pnid:wDwOKD5BW68SyQn4F2rioW-->
+    审计方式：逐列核对原表公式关系 → 用真实数据全量交叉验证 → 再与系统重算结果对比
+  </div>
+
+  <div data-page-node-id="yLlpAmrxzILAt5qt8XZFQR" class="card">
+    <h2 data-page-node-id="tXxeMgL7WAYLtAFxL2d6oe"><!--pnid:oWU3lARW4HD7tpCoRgtl4u-->一、总览：系统与原表一致吗？</h2>
+    <div data-page-node-id="QcLZW4NLynbAvZSDGbFIMV" class="kpi">
+      <div data-page-node-id="MKHJYDNtqD3GjcazQwg3UV"><b data-page-node-id="lX0imOZhg6Hi2T9fVKvvAA"><!--pnid:UDhDVpD7mhfHX7beXQcFtD-->62 / 62</b><span data-page-node-id="V04UggzXfXhp1k4NhTsOms"><!--pnid:diSixN6uBTlmCCAv5vpMS8-->9月计件·应发·应纳税 全对</span></div>
+      <div data-page-node-id="gN9dbt2AJ4APvoFwpS2VFG"><b data-page-node-id="w4EtXRsvb5WIvhlIzGpw1W"><!--pnid:WYRHuSkErkZohNfTkOGTms-->231 / 231</b><span data-page-node-id="OY3JEDGblVFI1u2NbvbGun"><!--pnid:0hRgy4wUz94P9KCn67gHqI-->个税表逐人核对 全对</span></div>
+      <div data-page-node-id="QWK7H35jsfTnqOAts8bbSF"><b data-page-node-id="CsAdNS9UfhkeXyrKfxE7rl"><!--pnid:GjJqOKwatpms5fI880Qfpm-->3 项</b><span data-page-node-id="3WUwYIrruzxjeSsdyPiKUm"><!--pnid:z937kw0S9QaBJsjKHeK7dG-->发现并已修复的问题</span></div>
+      <div data-page-node-id="n5nzuJbpzZWCgYjNlUMKB1"><b data-page-node-id="Uh5WvcEFKZ1Fi86K8Zttlk"><!--pnid:HU7IFTQdoT9zEndvcI1Z8b-->5 项</b><span data-page-node-id="ks5gzVzTWzEBrOxBA63gEw"><!--pnid:9cpWUPqQctpiduPt8mDM2e-->需要你确认的事项</span></div>
+    </div>
+    <div data-page-node-id="xcx4ceTCC8NS1Vu2EIJsah" class="box">
+      <b data-page-node-id="6owphrJhAxq4GhV2lu16tf"><!--pnid:HWpHnhII18CQlLhsPo0xct-->结论：核心计算逻辑与原表完全一致。</b><!--pnid:IHllvxwB6GEvfa4z7MgPLe-->
+      从每日录入（9月 2791 条记录）还原出的四类计件工资，与原表<b data-page-node-id="fdrX71HWYnbZjHcPas09kv"><!--pnid:7SCUwKmqPEJYm3zIfMGQtW-->逐人逐项 0 处不符</b><!--pnid:YCcOYkw3Ki7Upolu2WwRwp-->，
+      四个项目合计差 0.03 元（浮点四舍五入）。应发工资、应纳税金额、个税、补贴项也全部一致。
+      另有 3 处历史数据/口径问题已修复，见第三节。
+    </div>
+  </div>
+
+  <div data-page-node-id="30wfZX1BVquPCMSZSBYXFk" class="card">
+    <h2 data-page-node-id="Drn51fFRNxQtMqdzhE3ndI"><!--pnid:SptDNagpxwhDPYx9BA80fG-->二、从原表核出的公式关系（系统已 1:1 实现）</h2>
+
+    <h3 data-page-node-id="VWe76skQVAULkYiUmkZZLH"><!--pnid:tWIU6KKPh7d9b3OF92mPh5-->1. 工资计算主链</h3>
+    <div data-page-node-id="mExYsDTM0b71Y1znG4Qz48" class="formula">
+      <b data-page-node-id="rKxRWPtOJ2oe9LaSJ6GDpQ"><!--pnid:uD2prYWEzVfkIP36WSnq0h-->应发工资</b><!--pnid:4G4fDMm16SYTZR6ELGZTtB--> ＝ 计时工资 ＋ 印花计件 ＋ 复杂计件 ＋ 托盘计件 ＋ 24庄计件<br data-page-node-id="kBoWRv96aVsEqZJgp9z0ag">
+      <b data-page-node-id="8rAzNndvxw1FNNGlO4SDTY"><!--pnid:zookDSdc883GTFq2yd7nmd-->应纳税金额</b><!--pnid:LG1yezT183E83uqlk2CqCN--> ＝ 应发工资 ＋ 奖罚 ＋ 全勤/房补/高补 ＋ 餐补 ＋ 产能奖 ＋ 夜班补贴<br data-page-node-id="m5eR5wi4AQ9eaGC3itAsdz"><!--pnid:iIc9AHquNB0TfK5J34964A-->
+      　　　　　　　　　 − 水电费 − 社保 ＋ 门禁卡<br data-page-node-id="vYRs5asqAGv1g34QI6S6cT">
+      <b data-page-node-id="lMwzAVKvtOlV1K5juzMAcw"><!--pnid:HQ87yES15RVHDiiFAMnvR3-->实发工资</b><!--pnid:nop5ufdG8F8nYDtoopyaMj--> ＝ 应纳税金额 − 应缴个税 − 借支1 − 借支2<span data-page-node-id="cPjn41ZFlDH0SmrmP83ZK0" style="color:#94a3b8"><!--pnid:Lnv1uMKpyoGv0ZyFOkWBfc-->（原表列名「借支」和「签名」）</span>
+    </div>
+    <div data-page-node-id="3E7yEKOQQQrOzBQeJ18Ull" class="box w">
+      <b data-page-node-id="lVm9As9dYsLjY5yiFG1nvC"><!--pnid:YbLoh07RBf5jxt2uI5JZab-->说明：</b><!--pnid:HKAvETKn3LVKfJ2JSji93R-->原表「门禁卡」是<b data-page-node-id="Tb6C7KOh4IQUz0iwHbLWHn"><!--pnid:qq0gsuWfxrjLeI7oYYJPFr-->加项</b><!--pnid:COwxOQjULsDWbPTDzkNoFW-->且可为负（负＝扣款，正＝奖励）；「水电费」「社保」是减项。
+      系统与原表口径一致。
+    </div>
+
+    <h3 data-page-node-id="YV7qjrJJ4N4Xm7k9b4u8rV"><!--pnid:4L8Nkwy5MxUpJEhL25SIgs-->2. 个税（累计预扣预缴法，2019 年起）</h3>
+    <div data-page-node-id="8U7kcxGm3vU3rOpWTZ6sMl" class="formula">
+      <b data-page-node-id="ghuPXsIO9ieA3IGRgUcEQR"><!--pnid:fj2kRAMg0TyOqfzN8h0Cgz-->累计应发工资</b><!--pnid:RTVee7eneyIqvkMqqIVcug--> 　＝ 在职各月「应纳税金额」之和<br data-page-node-id="PIF6bcUw9bOWlv3AY2Syme">
+      <b data-page-node-id="Dlx56MhljvZZH1Rj0zF6ZP"><!--pnid:Sq2CcKyFdancHDPbI5WyaI-->累计减除费用</b><!--pnid:QOoat20emgbgobksDli8li--> 　＝ 5000 × <i data-page-node-id="ye3XJMuTmqf5HYrIu67BFy"><!--pnid:9TgjJ5ygN2T0KlDIcIYELC-->累计减免月数</i>　<span data-page-node-id="9K6PEYfKWxGBDBACNWL4bT" style="color:#94a3b8"><!--pnid:49QygTQ7BcS0Rh0ME6Lqbv-->（9月工资＝10月发，故用 10 个月＝50000）</span><br data-page-node-id="MnveVzduuUnzdQ1ECU6P4O">
+      <b data-page-node-id="xBgdckfcskU4KgHOyLoSIe"><!--pnid:gAbN0BK386XuQtuRTTw2ec-->累计应纳税所得额</b><!--pnid:NOPIjVGT4rEBT595K35fKC-->＝ 累计应发 − 累计个人社保 − 累计公积金 − 累计减除费用 − 累计专项扣除<br data-page-node-id="5lTPFPKRuYrzbQQrVA1WH4">
+      <b data-page-node-id="snVqkn8pneYU0N2ESVlUrY"><!--pnid:AnUEqVNUZNPqW7ot9TyzrS-->累计应纳税额</b><!--pnid:o03iplDTnvvskfcZFl2MbI--> 　＝ 预扣率表(累计应纳税所得额)<br data-page-node-id="iOGfD9PaIG5s6JV8HxGRWM">
+      <b data-page-node-id="hNtOK4GlMEbpO2uZIktMaN"><!--pnid:wKcaMa649BJ37W2mi163V4-->本期应预缴税额</b><!--pnid:yrTzkFnc0iPAoZ0CWA8wEu-->　＝ 累计应纳税额 − 累计已缴税额<br data-page-node-id="psk5AwJdWhyE33goC52rcA">
+      <b data-page-node-id="pYkCgjqA2EEzYpc7wbJ3TD"><!--pnid:WTmyz4i1QqAkEv8zUyrd6m-->工资表「应缴个税」</b><!--pnid:zErguDu8jwmpbExDtWQR94-->＝ max(0, 本期应预缴)　<span data-page-node-id="nZEryCajGZRKZoIdYmPCS2" style="color:#94a3b8"><!--pnid:RkwoVlBFSh1wn5B4Nl4was-->（为负说明多缴，本期不扣、自动抵以后月份，原表 15 人属此情况）</span>
+    </div>
+    <p data-page-node-id="d3wtiCvREgYB9iUo88pTEd" style="margin:4px 0 0; color:var(--sub); font-size:12.5px"><!--pnid:ffB1NXICAzwOlDU4SVBz2s-->
+      预扣率表（与原表一致、已用 231 人验证）：≤36000→3%；≤144000→10%（速算 2520）；≤300000→20%（16920）；≤420000→25%（31920）；≤660000→30%（52920）；≤960000→35%（85920）；超过→45%（181920）。
+    </p>
+
+    <h3 data-page-node-id="vByTCigeMRhspnXBPnFNVY"><!--pnid:KaTWRmn5CoL0aKfpAcYruQ-->3. 满勤与补贴（以 26 天为满勤线）</h3>
+    <table data-page-node-id="EK3ctZX04bDQI9oPUNjw1l">
+      <tr data-page-node-id="3WFaFQmiAY21lZvwMFUgm9"><th data-page-node-id="7MI4RXoapERh33QSvDBbM5"><!--pnid:CQcATGBvWaUgN2OX4kTo2F-->情形</th><th data-page-node-id="wfqXcubHFB2eF4Pik6Cqvf"><!--pnid:InU03cCDjvgzwOLkyarQrI-->全勤</th><th data-page-node-id="bEw9K6OP9EtvSf7MGqPndr"><!--pnid:4FceklXiXr6pskTiIHsIs0-->餐补</th><th data-page-node-id="PXGlyEYnjLvknEvNTqTVb7"><!--pnid:FZSQMM284AcMbI2GrBA1F6-->产能奖</th><th data-page-node-id="9X65cCP7iY4XwnFoIHZNkS"><!--pnid:xO63gkEpGu5g8rFj1Qx2EJ-->高补(6-10月)</th><th data-page-node-id="MPQsTPrITQNGUIjGKX3Dtn"><!--pnid:htPBOp5FcjLBcfXH2CTXTT-->房补(夫妻)</th></tr>
+      <tr data-page-node-id="ZsUewFNhRsKeBsv0UITWqj"><td data-page-node-id="UHdC6R26gRcnvw9nw5jj3L"><!--pnid:u64ALbWGGoe51PlyQcv3wI-->出勤 ≥ 26 天（满勤）</td><td data-page-node-id="0odgI8MgEwQPMwx5GagcnQ" class="num"><!--pnid:nAlgxOBUaoQuYO9ZwHoEBc-->300</td><td data-page-node-id="vP16IjChN41X2sOpjcSzsM" class="num"><!--pnid:dcjoyXApgMmwSlAIBTHGzN-->100</td><td data-page-node-id="i0lCfP3ewPoe7Fchqu22zi" class="num"><!--pnid:OibpyZuAT1HMdLkDAtW3uF-->300</td><td data-page-node-id="pw7YPEzPZSE97GlIvc4vea" class="num"><!--pnid:ho9HgtVjkXZXXNT6Xs8ogO-->250</td><td data-page-node-id="O9pcUXkFDp6bDPzK7y0oha" class="num"><!--pnid:OgwcFOAPhQtTBonJVQ7bol-->150</td></tr>
+      <tr data-page-node-id="go3dNpGNnTv3GlK4mn2IDB"><td data-page-node-id="xIkMLsi6ShiY81ClOkmKBh"><!--pnid:IvzlBIkusy6TVDh4LVuEHt-->请假 1~2 天（24~25 天）</td><td data-page-node-id="FB1CYnk8gmeGICBBhbWoGa" class="num"><!--pnid:lIb14e3efAyRq0YG0takml-->0</td><td data-page-node-id="5Zy1Y9zsGH7zo2CkdtAA0S" class="num"><!--pnid:yxVF9LlNXcFnbvhZzg2ITT-->100</td><td data-page-node-id="Q2CEZl2llQ6SS9zYr4NnON" class="num"><!--pnid:zf4zk1VpKDfWCsmJBIDNS7-->300</td><td data-page-node-id="KCTxne7afyI1OCNhYgLket" class="num"><!--pnid:QSoNV9MPmqdtTinudsF7Qi-->0</td><td data-page-node-id="gXAYSFrHZNTEKCogu3Ltl7" class="num"><!--pnid:q0se4m1UfK01tLHrxcSEA5-->0</td></tr>
+      <tr data-page-node-id="jWDT1EM5reFljmusRtR07I"><td data-page-node-id="aWiqP6bKrACRijoKeZWgLI"><!--pnid:Dl3hQKFwvidweb6S6vVnd9-->请假 &gt; 2 天</td><td data-page-node-id="WDMdCHSWPWPl6EPdqpf0Qj" class="num"><!--pnid:QJooqV4VKPKjSuspypEQFI-->0</td><td data-page-node-id="NaEFzYHotQCnhFTXq5pwUM" class="num"><!--pnid:BPw6QyFLHaQGcLaWM461Kj-->0</td><td data-page-node-id="95pcQoh2TmvvMh8Iu8gu0n" class="num"><!--pnid:vZXiFFijwqZZaIA2PiCFRv-->0</td><td data-page-node-id="rGPwfwC4imSKNSv0rvgD4p" class="num"><!--pnid:sXqctYIpdTPhpTLoKZYICA-->0</td><td data-page-node-id="DbF8KD8WUXOdYgk5ULKhI7" class="num"><!--pnid:Kmy4nrem6TgUMSO2BVo0u1-->0</td></tr>
+    </table>
+    <div data-page-node-id="lQL4vmmidZ2SSPhDk34uZT" class="box">
+      <b data-page-node-id="3xi3UMLB4o4bKj9MwQnLLr"><!--pnid:RIK8iOShlePuakbmpsVjnw-->已用 9 月 62 人验证：</b><!--pnid:cv9muO0YPEuA537BzKCLNu-->全勤/房补/高补、餐补、产能奖三项<b data-page-node-id="N03PsBaHQwmtKlrDjaYkBG"><!--pnid:vmJ4X6TTYLAywShdVMuTKJ-->全部对上</b><!--pnid:YsLH2yQTdmekprn434KUmb--> ——
+      说明「26 天满勤线」「请假 1~2 天只取消全勤」这套规则与原表一致。
+    </div>
+
+    <h3 data-page-node-id="GvGfHyEeGh7lchh5Ot2CtK"><!--pnid:0pfECD30iQdqveNMgf4ya8-->4. 其他</h3>
+    <ul data-page-node-id="imFgm2JaUmbxQvZI01QEfV">
+      <li data-page-node-id="rsC3EZlJpxlWEfLNK60uAq"><b data-page-node-id="UwakySPyX24eaQ6d5Wo8uH"><!--pnid:rf8PNsXzTcnBErImUVAXQC-->夜班补贴</b><!--pnid:MMnviguFnHCiZNIPaM5mzn--> ＝ 夜班天数 × 10 元/晚</li>
+      <li data-page-node-id="c7Kh5byuDbtJKYzEYd7BjG"><b data-page-node-id="QqXwCyzNE06rcdmQsjGeg2"><!--pnid:VjF4z92wqQBJiNb1miOgtX-->计件工资</b><!--pnid:OLyxNj5al9Lg8zwR3OHyOt--> ＝ 该机台当日产量 ÷ 作业人数（人均）× 计件单价</li>
+      <li data-page-node-id="thCXft5jh1q2WDwGGCm77d"><b data-page-node-id="4WNnm52qW1H4sUPFTjEpT1"><!--pnid:PLobubjLTdoPz1EjtExw9k-->出勤天数</b><!--pnid:dY9r5JqCWb3Q1i6hdyGBuF-->：原表是人工考勤天数；系统默认按「当天有产量分摊记 1 天」（半天可改 0.5），也可手工填写覆盖</li>
+    </ul>
+  </div>
+
+  <div data-page-node-id="sBAN5z9qar9KsCLvs3oPaW" class="card">
+    <h2 data-page-node-id="UvaXarEkH4rYTKh71md0kb"><!--pnid:qHXAdTqS19aSFHRQ9zRukA-->三、本次审计发现并已修复的问题 <span data-page-node-id="1DFj3JDZrny1tMI5k0UAeS" class="tag t-fix"><!--pnid:j2dBRK5eDwpK7qQdMmzLo2-->3 项</span></h2>
+
+    <h3 data-page-node-id="jn2YB0h6tySQpZ11mMyU83"><!--pnid:uUfvL21Dbh5eVw01vzJkst-->① 7／8 月导入时漏了「签名」列（＝第二笔借支）<span data-page-node-id="TdxzlqNYnb5TBucUqx4H13" class="tag t-fix"><!--pnid:kwT2WxQzEMs3RqYoyBgFRX-->已修复</span></h3>
+    <div data-page-node-id="OtmNCDsYwYSukRYb8CrY7I" class="box d"><!--pnid:FX3tBFxJmHefS2wTOeDZpq-->
+      原表最后一列表头写着「<b data-page-node-id="FNHTtWsg0jF3ca66erDaDm"><!--pnid:LeyavMHGBHoHe2NjwVgI9C-->签名</b><!--pnid:Ei5tM6CLwaAMOanHR4EkxE-->」，但里面装的是<b data-page-node-id="o0qm3NVH1lTY9GXSItgX6u"><!--pnid:INx3xgSSto76m8gljkOJ6X-->第二笔借支</b><!--pnid:jphfaFhaMOQ4pvmwV42PMe-->（已用 62 行验证：实发＝应纳税−个税−借支−签名，全部吻合）。
+      7／8 月导入时这列被当成无关列丢掉了，导致<b data-page-node-id="9xyWMewyoqR4uAuXjiTRmr"><!--pnid:M5khINHhzLmgzOetvQSa7V-->实发工资偏大</b><!--pnid:kpPPIxlWHG77HDlGseRX2C-->。
+      <br data-page-node-id="8iKpqsBFpvwCG9Dlqoj5n5"><!--pnid:JgwQMwOWXTZGFFs4DA2JiP-->已补齐 <b data-page-node-id="QnqdLU3b7mnMBwQwxH4woj"><!--pnid:qJrhOhSBrA88tKUpEMQPIg-->18 处</b><!--pnid:zHIFwnOIEm2gTwoVejKQdZ-->（7月 8 人、8月 10 人），金额 1000～6000 元，<b data-page-node-id="IGlsWWotHq9QugitcIoAyM"><!--pnid:ostLEY303HLiOLsAk4NDCK-->合计约 5.7 万元</b><!--pnid:2bHdsnbbZ7H4jDVori6NEq-->。
+    </div>
+    <table data-page-node-id="jhRiZYqMDYgellEYIXXfOB">
+      <tr data-page-node-id="yzgONlq14JQZE8c52yewOA"><th data-page-node-id="SzYMBHXONymxWs4Jox0gL0"><!--pnid:6AiQiQ1CHGUIqcWkmxkAez-->月份</th><th data-page-node-id="TlqWzxfzlFfxslDSCRc32n"><!--pnid:hC4MtCRpFApoIB0Di126Jw-->补的人</th><th data-page-node-id="VUEYgWzmerpohnhCZ0EpRe"><!--pnid:dse4iOtUaSflZVAiU5zMMg-->金额</th></tr>
+      <tr data-page-node-id="xHZ3oXCHZiB53Astdt89b6"><td data-page-node-id="KK9MIPC18E2iN23gdUrm8S"><!--pnid:mQ3wJqL6RHclxSxmER8mwP-->2026-07</td><td data-page-node-id="f8vhIeSWhsyg15gShvm0Oa"><!--pnid:Y7desirEnKoPSElHZmqAzy-->陈列添 2000、张继峰 3700、颜俊峰 4500、林维昌 4000、葛秋麟 6000、杨建平 1000、代鹏 5000、朱思前 4000</td><td data-page-node-id="52I71CJrQXd6LJy0kmR5kv" class="num"><!--pnid:ARGULW1AwR3YgEYna0NlOJ-->31200</td></tr>
+      <tr data-page-node-id="tfZP5fw6m5nPMknQicda34"><td data-page-node-id="TwuDAn783fbekbVnGW9qKW"><!--pnid:x1iHL43p4cXdqhSyUMob6N-->2026-08</td><td data-page-node-id="9ExqUB0TLGkYcMxQoMwJ2o"><!--pnid:LiGZEcE1GW2y0ZTEb8ECEM-->张继峰 3000、黄辉尚 1000、张祖寿 1000、颜俊峰 4000、唐朝辉 2000、林维昌 4500、葛秋麟 5000、杨建平 2000、代鹏 5000、朱思前 4000</td><td data-page-node-id="u4hyPHkqWtZaBsaRADTkRP" class="num"><!--pnid:WpBZ9oPfneF1ZNwTLEW49c-->31500</td></tr>
+    </table>
+    <p data-page-node-id="ZfhuPmx80rynuu19pAWb0k" style="color:var(--sub); font-size:12.5px; margin:4px 0 0"><!--pnid:APvwRgEfh2wDbIvIiZXQK2-->
+      修复后再核对 7／8 月：<b data-page-node-id="neq0vkeNQbI1W39C5lqvUk"><!--pnid:GKyDSR1J1Z4Xt34CEFjoSG-->借支2 已 ✅ 全部一致</b><!--pnid:YW0xtBi1wV68rSoAkMSoVF-->，实发工资随之纠正。
+    </p>
+
+    <h3 data-page-node-id="xMIFiL2lb0UNvXrSmxenlv"><!--pnid:p7MTiTkRa9reOqd70ZKRYl-->② 9 月「天数」用的是系统自动值<span data-page-node-id="ZM6GHaQddVKO6FVQWAQ1nS" class="tag t-fix"><!--pnid:FraJQs8FPN7ZZIKoUExGws-->已修复</span></h3>
+    <div data-page-node-id="LGP842GOLLBEwLB9Z74X5U" class="box w"><!--pnid:YwSj6Li29X1XVZrbdnQIqS-->
+      9 月没导入过原表，所以补贴项金额是从原表带来的（都对），但<b data-page-node-id="mSbTnlM2bqwDbYxSPydxja"><!--pnid:9421vcTFstxcUanvo3ZCKN-->天数</b><!--pnid:87tdlpSP896ZH5KDjYkWE6-->用的是自动统计值，
+      与原表的考勤天数有 0.5～4 天差异（36/62 人）。已按你原表的数值写入 9 月，
+      修复后 <b data-page-node-id="MuGxtWvf6esKky1zn3mAJA"><!--pnid:jG1yiNeaPdEqcKvWPWF9gI-->62 人天数 0 处不符</b><!--pnid:I9QFEcpvf74NcOz7U88t1V-->（金额不受影响，因为全勤等本来就是原表的手工值）。
+    </div>
+
+    <h3 data-page-node-id="Liakui1O61hU0nJEUBbUac"><!--pnid:1QysxLws0N4kN9oWslwSS6-->③ 天数即将影响满勤、却看不出风险<span data-page-node-id="xTZ66BcpsnRU0Df5gtBgUb" class="tag t-fix"><!--pnid:IqtEyEi5ZC07RPqbW7EVHi-->已加固</span></h3>
+    <div data-page-node-id="njqluorXcxqDBV4Ag6G2P6" class="box w"><!--pnid:zQjOY9wVU2AJgtsZ6omBKg-->
+      自动天数只差 1 天，就可能把「满勤」判成「不满勤」，一次差 <b data-page-node-id="6YsSvY4v6n9NNVjrKJz6Ot"><!--pnid:asvzfZmBMDNFrys4TZEX1d-->700 元</b><!--pnid:3rEbmHxgZDdel8RE2j5fBt-->。
+      已在「③ 员工补贴/扣款」的<b data-page-node-id="hW4gwKFu7iUVKxdgm6YzE2"><!--pnid:XhcA9DY4bWNgBoiooHgHEC-->天数</b><!--pnid:46yebXDrCfMKxx0pZQSttF-->列加了提醒：<b data-page-node-id="OQKY0M634QvSTSC5HCVtQN"><!--pnid:lzeLc4thQFsalJjFKX0CrN-->当自动天数离满勤线 ±2 天且还没手工填时，该格标黄并提示核对考勤</b><!--pnid:cfioAtGTW4aRmdc9eGRiqv-->。
+    </div>
+  </div>
+
+  <div data-page-node-id="TicWTMqjUPqcmJJPI1Dd0S" class="card">
+    <h2 data-page-node-id="kk2EJPR6g1QPh2v3R8Llds"><!--pnid:NxnevriyOCVjGw20Fei7nI-->四、需要你确认的 5 件事 <span data-page-node-id="TnbSGfj8z2OnDcZcgO6h2V" class="tag t-note"><!--pnid:1phgBYlrrohSFNCU1W6qsX-->请过目</span></h2>
+
+    <h3 data-page-node-id="Zzqst6fcYe2eSt53KFmuO8"><!--pnid:ZOIRO6zLgkLhH5i9oQ5gjz-->1. 出勤天数的口径（最值得留意）</h3>
+    <ul data-page-node-id="t0Z5fCisR8nvYWaLrLinOb">
+      <li data-page-node-id="TK9Xczu1Jx2wIBkzDCYs64"><b data-page-node-id="EHXO7MRN85KePGaOg3E62g"><!--pnid:9Mdzhvd3OdVhzyw16Py1Kv-->系统</b><!--pnid:6HE0YTxpHW5NbzEMCR8RS1-->：当天在「每日录入」里有产量分摊 → 记 1 天（自动、省事）</li>
+      <li data-page-node-id="EDILEIh2bWTxdWrcU45dvM"><b data-page-node-id="iyOfO9vo3Dx0dgWMGTWKwO"><!--pnid:9H2zH2tSvSAmnEsgilI8TJ-->原表</b><!--pnid:S1V2KI7SpSIk5VftCf73Mt-->：你人工考的勤（可能含来了但没排产量的日子）</li>
+      <li data-page-node-id="EHssRdtdGEWLG5r8s5Ee5T"><!--pnid:sN4ttOtErb7JcPrhh7oBrV-->两者差 <b data-page-node-id="5K29fJ4wWZlWgc4L0f4jpW"><!--pnid:MChe69MPtod5dMt9Ujf5p2-->0～4 天</b><!--pnid:xpNbXTQ2WP7UsT9ZvwzEXx-->。9 月有 3 人因此满勤判定不同（张富松/张富超差 1 天、聂俊杰差 1 天）——
+        好在他们 9 月的补贴金额已按原表锁定，没有算错。</li>
+      <li data-page-node-id="r6gFRrnoh7k5pkE9c46VKD"><b data-page-node-id="CnszqXuvscntA0WGYsdH28"><!--pnid:usT2sT5XhnlOFxcdOHmtUI-->以后每月建议</b><!--pnid:iShHmxdbjrYKtaNmVYW9Td-->：看到天数格标黄（离 26 天很近）时，核一下考勤天数，不一样就直接填。</li>
+    </ul>
+
+    <h3 data-page-node-id="mFsrzQj3oE3gIEHbRO043z"><!--pnid:hYT5OakiIoFX3QLu8PHjDn-->2. 7 月原表有 2 行「实发工资」与公式不符</h3>
+    <table data-page-node-id="Uh7XmSkMURYn4MtTrNFl8H">
+      <tr data-page-node-id="R0PtyNsotSU0AoRVbb9Sv9"><th data-page-node-id="68UxgWql3gJbXfmLmsK3Rf"><!--pnid:NNmBkPSrOsSewauOxp7YVB-->姓名</th><th data-page-node-id="L0DeFnPhVCfUcT1qAlUQDv"><!--pnid:3o4XocDuxuEeBgqKZ896qB-->按公式应为</th><th data-page-node-id="j1TyrK2mnApiDPLj5QRXYf"><!--pnid:dNK7nXVvaOyrLrIvKs7LYJ-->原表填写</th><th data-page-node-id="yJ24XhDwe12qw9h2dtcFtI"><!--pnid:PrIfsLfZkrwhfTuC1Y2Ell-->差额</th></tr>
+      <tr data-page-node-id="Om6jZ31R00RFvjcSPCG09s"><td data-page-node-id="O4QzIodb1QE2svRguvWC3t"><!--pnid:t2DrS5V8nc6PxY3QfAbgEE-->吴凤仙</td><td data-page-node-id="UHR2gsuzcC816it8LqAwcC" class="num"><!--pnid:7NMEGhnE7B5Nmo1vmlFNXw-->5556.02</td><td data-page-node-id="ZcaFqJiiCbbnlyzCoYwksw" class="num"><!--pnid:E7uin0DGzwPnyo18Ai8C75-->4922.69</td><td data-page-node-id="oQ5jhsTE8ENYiBqJpn8aAB" class="num bad"><!--pnid:Y3xrdtLpoGgA2pBIJNTkm5-->−633.33</td></tr>
+      <tr data-page-node-id="FUUxMJXY2RfSdj3LKmAR28"><td data-page-node-id="lCvantMLafgKSfpXFnPwdr"><!--pnid:4aI94uXwJa0zbXL0j98xIo-->欧孝廷</td><td data-page-node-id="oaCrc0RgGZFUJ7F5vG6ERg" class="num"><!--pnid:vxyodJG51YckLVVdea8N8t-->4572.67</td><td data-page-node-id="CvZY2SrEGtKJSTPEbaWIQt" class="num"><!--pnid:rZlBVd219Ri0WhsHxnoV9M-->3846.32</td><td data-page-node-id="Y4p5k9I7mzSTaqDQU6YdWo" class="num bad"><!--pnid:Oil0KHsVJDchU6QU9ekF5r-->−726.35</td></tr>
+    </table>
+    <p data-page-node-id="WwAWU6zqoSaKtnH37viftk" style="margin:4px 0 0; color:var(--sub); font-size:12.5px"><!--pnid:cEcCl2P3hwzm8To7E41wed-->
+      这两行在任何列里都找不到对应的扣款来源，应是当时手工改过实发（线下扣款）。
+      系统按公式算，所以会对不上——<b data-page-node-id="y0iWlM8YlH0mo797fkZJ05"><!--pnid:y4ZcmEMn4fUedXEHFj3m93-->如果你记得是什么扣款，告诉我，我加进明细</b><!--pnid:BnHbmuln4Tyy5wb0fKlHL5-->。
+      （9 月表 62 行全部自洽，无此问题。）
+    </p>
+
+    <h3 data-page-node-id="y0lURiBvVy9qOv09TB37k2"><!--pnid:EqWGPLbbiiEm95N9DQwqg9-->3. 「介绍费奖励」系统里没有对应功能</h3>
+    <p data-page-node-id="cEUlEpFeZcQMixCxzFE2YQ" style="margin:4px 0 0"><!--pnid:aoW1dp9xzxY5IfV2WCe6eA-->
+      你的表里有一张《9月介绍费奖励》，记的是「谁介绍了谁入职、奖励多少」（如朱思前介绍朱徐庆 146.66）。
+      这笔钱是发给<b data-page-node-id="VpiJnf1R14JBpaZKmV8HqA"><!--pnid:mKTFgMHhmVEdV1abHmhXlO-->介绍人</b><!--pnid:HkxOlNZKcJZk6U36rRLD8C-->的，而介绍人常常不在员工名单里（老王、马媛、招聘专员…），
+      所以它没有进工资表。如果这笔钱也要走工资发放，我可以做一个「介绍费奖励」通道，像借支登记表那样。
+    </p>
+
+    <h3 data-page-node-id="joMqI2v4avvFk4IVpqhvWW"><!--pnid:4jcvbRTfzOYh0m5mkASFjF-->4. 新员工的「累计减免月数」</h3>
+    <p data-page-node-id="MEvbSaze7n5ihqq8sGuzR0" style="margin:4px 0 0"><!--pnid:NualyqXVx4FkjolM2Oweck-->
+      老员工默认用「发薪月数」（9月工资→10个月），与你原表一致。
+      但<b data-page-node-id="MCOlfR7Y119rR2JLgvTtyh"><!--pnid:XnNBsbfimTJIPIAqunAX1Y-->年中新入职</b><!--pnid:xInaHlqKsEEroAXersktot-->的人应该按实际在职月数（如覃树绵是 9 个月，不是 10）。
+      系统在「③ 补贴扣款 → 个税累计」里留了手工填写的位置。例：李佳乐 7 月差了 19.39 元。
+    </p>
+
+    <h3 data-page-node-id="HlRUwbpfwAAlpQFIFGvd01"><!--pnid:tDHREXi1IWdvCU9sijjVGe-->5. 8 月有 2 名新入职员工的计件略有出入</h3>
+    <p data-page-node-id="fqSYnFWm7ghm4WfwEDaidG" style="margin:4px 0 0"><!--pnid:qn9tep3XLJWfljqujdNoKJ-->
+      梁绍章（差 121.03）、梁迪彰（差 35.26），且原表没填他俩的天数（系统算出 13 天）。
+      金额很小，应该是 8 月录入还原的细节，需要的话我可以细查。
+    </p>
+  </div>
+
+  <div data-page-node-id="QwHHuprL1Ze63s1i1UdXC6" class="card">
+    <h2 data-page-node-id="hKvGdltdSUiL9FuuCYINQD"><!--pnid:veJz7OjDwglQDjzY4a8b55-->五、效率功能有没有偏离原表逻辑？</h2>
+    <p data-page-node-id="LptBBaTTvKRwLnaNWrsG5v"><!--pnid:sMKPqzU2B3sC8GQ028AsoY-->逐项检查过，<b data-page-node-id="HeWbUDW9VBAQ3yQSsEBzYA"><!--pnid:41onca5tpi6eG5IqTopki5-->没有偏离</b><!--pnid:zoQbfW7Ll3pamKqhoFjoKK-->：</p>
+    <table data-page-node-id="eevCv3Gx7O6MIkdjFDAFDf">
+      <tr data-page-node-id="EtVz6rUHK6LIK0L81lmsaj"><th data-page-node-id="TRN0yX3t0omMpodJJYrJvw"><!--pnid:j8CRDLJ2fORvvKGZQ3P3S0-->效率功能</th><th data-page-node-id="4BGm5gNHdAS9SU82jR9EfA"><!--pnid:ZVuNsXu7QMdokTzBDZVTbo-->是否影响基本逻辑</th></tr>
+      <tr data-page-node-id="dxuuRoYaJBEHXCZbvUzd9v"><td data-page-node-id="6d9dAjRcDU5vW1u2VqaDSF"><!--pnid:leOzSCOMXKAVeSQBCKxJA8-->智能导入（群消息/截图粘贴 → 自动人均产量）</td><td data-page-node-id="4ig48uVGaX2V693BYeqpKV" class="ok"><!--pnid:ZF2RYULpDASBXzFn4TsvRv-->不影响。只是把「机台产量 ÷ 作业人数」这件事自动化，算法与原表一致（已验证 9 月 62 人 1:1）</td></tr>
+      <tr data-page-node-id="33f2SfHWl0fO0kPvCRnLB3"><td data-page-node-id="VTYpq9Sl1LUkwxj9qIkOhY"><!--pnid:K7VWh58Z0hUF6lwOeK9K25-->借支1 直接匹配（不用人工找）</td><td data-page-node-id="IYLvvZMkdF1z5SQbx1RHHy" class="ok"><!--pnid:6LzU2CFWIEsqxSMnjMXxdl-->不影响。仍是「同一个人多笔累加 → 写入工资表借支1」，只是省去了手工汇总</td></tr>
+      <tr data-page-node-id="U943wB1uIG8A8gIwIJwH0W"><td data-page-node-id="jyiYtQ8PIQoB6rQ4tBCYJC"><!--pnid:al9M7QgaSaakY0IzcnQG4O-->水电费分摊表（宿舍总额 ÷ 人数）</td><td data-page-node-id="B99tYsdXqqymcRguFXESfr" class="ok"><!--pnid:GG2MXmFOh1w0zLqTUUcAeB-->不影响。写进工资表「水电费」列，仍是减项，零头分摊不丢</td></tr>
+      <tr data-page-node-id="IqfT5Q5PjTfNU7q8nbkJZg"><td data-page-node-id="68Zbz6EDPHgYDdMRzFkL3V"><!--pnid:0Ir2rHfkwQ8UJ1YAr9ylbC-->白班/夜班自动判定 → 夜班补贴</td><td data-page-node-id="V2jwsFVmo2UT60Rby8GlrV" class="ok"><!--pnid:pC3GuWjuJd7ABRzWwdOoMl-->不影响。夜班天数 × 10 元，与原表口径一致</td></tr>
+      <tr data-page-node-id="NrmvBM2JpmmUa22c4gxuUX"><td data-page-node-id="t3Royc6tFZp1NFxx0dt4qf"><!--pnid:2Rigw0C5hwwrf9Kskuk0HJ-->入职/离职按月过滤</td><td data-page-node-id="jXDt0ZCN7s7stWuMYNJCkI" class="ok"><!--pnid:HJA4reXIVprmmPdXKXtVNF-->不影响在职人员的计算，只是让不该出现的人不出现</td></tr>
+      <tr data-page-node-id="wqM58xEvS1wOme9UVUJ6yY"><td data-page-node-id="FsgbbxjN1Ba2LyzDtYIXmb"><!--pnid:gMs0adejvMnUVVQxeIBlHn-->日期栏三处联动</td><td data-page-node-id="24it1JTlTXWbjc4YJpXSHW" class="ok"><!--pnid:H5y6M8kSib1YZWLnShuQRR-->不影响。只是让各页签看同一天/同一月</td></tr>
+      <tr data-page-node-id="qFZelTeDae4bXAKdnwLxTd"><td data-page-node-id="yL3MwAQsB4gq56fSDEinGO"><!--pnid:gzuafAqXGcWnKtCNzwivB7-->出勤天数自动统计</td><td data-page-node-id="yTjO0lJyoZ8hmjl3oCO6i7" class="warn"><!--pnid:OBJVTMLEI4eB9MywM03uEJ-->唯一需要留意的：口径与人工考勤有差，已加标黄提醒（见四-1）</td></tr>
+    </table>
+  </div>
+
+  <div data-page-node-id="tmSMKv7z9hoAfQo0T6FmrF" class="card">
+    <h2 data-page-node-id="Dyzb6di1Vxx2xLtMkzvRWD"><!--pnid:0Z7o2wzHLf3ixeflWFmBuG-->六、本次改动清单</h2>
+    <ul data-page-node-id="qx145hqb9PVlodV5AwBLGf">
+      <li data-page-node-id="1W7VCBPM0tqjsAvdOEHwl2"><b data-page-node-id="75FCFpGQfCX63xYPgLPEJz"><!--pnid:navTmtA2l04oTA2xLTk8v8-->数据修复</b><!--pnid:7RBJuGBqJrzH2pU0A4KqmD-->：7／8 月补齐「借支2」18 处；9 月写入原表考勤天数 62 人</li>
+      <li data-page-node-id="0Q0RQ67ghcDlmeN7yiuhUr"><b data-page-node-id="kqM0xYEvZ2aP2alVwk6qeM"><!--pnid:o7R7J7qJUP37DFWXxCiQL6-->代码加固</b><!--pnid:fsz2HU2bpX0GTZGSARq4AE-->：③ 补贴扣款的「天数」列，离满勤线 ±2 天时标黄并提示核对</li>
+      <li data-page-node-id="juaUeAIV3fyb7oyKibbR96"><!--pnid:TC26W7AwbXIRPIm6mct4nd-->改动前已自动备份（<code data-page-node-id="Chq0AlHkpB1ErFgfog5GHj" data-pnid-children="ehyff1l8CB3JM9l8Dx3Wc2">data/bak/</code><!--pnid:w917i5qtDScObuoRETKGN5-->），员工、每日录入、原表快照均未改动</li>
+    </ul>
+  </div>
+
+  <div data-page-node-id="aYvaYvtyBv7MitJSUQxRHK" class="foot"><!--pnid:BZOtTCpPq4FSJ3MMt3yw8f-->审计基准文件：2026年9月份工资表(2026-9-30核定) · 13 个工作表 · 62 名员工<br data-page-node-id="R0wsH9vRKzFfnghunQT7hy"><!--pnid:IQOmV7uhJmUj4Vo48dx8Ep-->
+    全量验证覆盖：9月原表 62 行 × 22 列 · 个税表 231 人 · 每日录入 2791 条 · 7/8月原表快照</div>
+
+</div>
+</body>
+</html>
